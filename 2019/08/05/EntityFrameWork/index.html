@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="generator" content="Hexo 3.9.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.3.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.3.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.3.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.3.0',
+    sidebar: {"position":"right","display":"post","offset":12,"onmobile":false},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    search: {
+      root: '/',
+      path: ''
+    },
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="EF 6.x 和 EF Core有一些不同，详细区别参见官方文档比较 EF Core 和 EF6">
+<meta name="keywords" content="EntiryFrameworkCore">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Entity Framework Core">
+<meta property="og:url" content="http://yoursite.com/2019/08/05/EntityFrameWork/index.html">
+<meta property="og:site_name" content="IxdCoding&#39;s Blog">
+<meta property="og:description" content="EF 6.x 和 EF Core有一些不同，详细区别参见官方文档比较 EF Core 和 EF6">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://www.entityframeworktutorial.net/Images/efcore/ef-core-dev-approaces.png">
+<meta property="og:image" content="http://yoursite.com/images/01.png">
+<meta property="og:image" content="http://yoursite.com/images/02.png">
+<meta property="og:image" content="http://yoursite.com/images/03.png">
+<meta property="og:image" content="http://yoursite.com/images/04.png">
+<meta property="og:image" content="http://yoursite.com/images/05.png">
+<meta property="og:image" content="http://yoursite.com/images/06.png">
+<meta property="og:image" content="http://yoursite.com/images/07.png">
+<meta property="og:image" content="http://yoursite.com/images/08.png">
+<meta property="og:image" content="https://www.entityframeworktutorial.net/images/efcore/save-data-in-connected-scenario.png">
+<meta property="og:image" content="https://www.entityframeworktutorial.net/images/efcore/configure-onetomany-fluentapi.png">
+<meta property="og:image" content="https://www.entityframeworktutorial.net/images/efcore/onetoone-fluent.png">
+<meta property="og:image" content="https://www.entityframeworktutorial.net/images/efcore/manytomany-db-diagram.png">
+<meta property="og:image" content="https://www.entityframeworktutorial.net/images/efcore/save-data-in-disconnected-scenario.png">
+<meta property="og:updated_time" content="2019-08-07T10:19:06.991Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Entity Framework Core">
+<meta name="twitter:description" content="EF 6.x 和 EF Core有一些不同，详细区别参见官方文档比较 EF Core 和 EF6">
+<meta name="twitter:image" content="https://www.entityframeworktutorial.net/Images/efcore/ef-core-dev-approaces.png">
+  <link rel="canonical" href="http://yoursite.com/2019/08/05/EntityFrameWork/">
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Entity Framework Core | IxdCoding's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">IxdCoding's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">所以我一次次按住内心的雪,他们过于洁白过于接近春天</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+    </ul>
+    
+
+</nav>
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/08/05/EntityFrameWork/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="IxdCoding">
+      <meta itemprop="description" content="这人间情事,恍惚如突然飞过的麻雀儿">
+      <meta itemprop="image" content="/images/ixd.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="IxdCoding's Blog">
+    </span>
+      <header class="post-header">
+
+        
+          <h1 class="post-title" itemprop="name headline">Entity Framework Core
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-08-05 15:39:41" itemprop="dateCreated datePublished" datetime="2019-08-05T15:39:41+08:00">2019-08-05</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-08-07 18:19:06" itemprop="dateModified" datetime="2019-08-07T18:19:06+08:00">2019-08-07</time>
+              </span>
+            
+          
+
+          <br>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>EF 6.x 和 EF Core有一些不同，详细区别参见官方文档<strong><a href="https://docs.microsoft.com/zh-cn/ef/efcore-and-ef6/index" target="_blank" rel="noopener">比较 EF Core 和 EF6</a></strong></p>
+<a id="more"></a>
+
+<h2 id="开发方式"><a href="#开发方式" class="headerlink" title="开发方式"></a>开发方式</h2><p>Entity Framework Core支持两种开发方式  </p>
+<ul>
+<li>Code-First  </li>
+<li>Database-First  </li>
+</ul>
+<p>EF Core主要针对<strong>代码优先</strong>的方法，对数据库优先的方法提供的支持很少，因为在EF Core 2.0中不支持DB模型的可视化设计器或向导。<br><img src="https://www.entityframeworktutorial.net/Images/efcore/ef-core-dev-approaces.png" alt="1"></p>
+<p>EF Core支持特性有：  </p>
+<ul>
+<li>DbContext &amp; DbSet</li>
+<li>Data Model</li>
+<li>Querying using Linq-to-Entities</li>
+<li>Change Tracking</li>
+<li>SaveChanges</li>
+<li>Migrations</li>
+</ul>
+<h3 id="安装EF"><a href="#安装EF" class="headerlink" title="安装EF"></a>安装EF</h3><h4 id="安装-EF-Core-DB-Provider"><a href="#安装-EF-Core-DB-Provider" class="headerlink" title="安装 EF Core DB Provider"></a>安装 EF Core DB Provider</h4><p>  EF Core允许我们通过提供者模型访问数据库。对于不同的数据库，有不同的EF核心DB提供程序可用。这些提供程序可以作为NuGet包使用。<br>此处以Ms SQL Server Database为例，需要在NuGet中安装名为Microsoft.EntityFrameworkcore.SqlServer的NuGet安装包</p>
+<p>1.右键单击解决方案中的项目，选择选择NuGet程序包<br><img src="/images/01.png" alt="图片01"><br>2.搜索Microsoft.EntityFrameworkcore.SqlServer，点击安装<br><img src="/images/02.png" alt="图片02"><br>3.接受许可证<br><img src="/images/03.png" alt="图片03"><br>4.安装完成<br><img src="/images/04.png" alt="图片4"></p>
+<p>同时，也可以通过 <strong>工具-&gt;NuGet包管理器-&gt;程序包管理器控制台</strong> 输入以下命令安装  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PM&gt; Install-Package Microsoft.EntityFrameworkCore.SqlServer</span><br></pre></td></tr></table></figure>
+
+<h4 id="安装-EF-Core-Tools"><a href="#安装-EF-Core-Tools" class="headerlink" title="安装 EF Core Tools"></a>安装 EF Core Tools</h4><p>  安装EF Core Tools以使用EF core命令。同上，打开NuGet UI，安装名为Microsoft.EntityFramworkCore.Tools的NuGet安装包<br><img src="/images/05.png" alt="05"><br>至此，成功安装EF Core到解决方案中</p>
+<h3 id="使用DB-First方法"><a href="#使用DB-First方法" class="headerlink" title="使用DB-First方法"></a>使用DB-First方法</h3><p>在使用DB-First方法之前，需要先建立完整的数据库，然后在PMC（程序包管理控制台）中使用以下命令：  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PM&gt; Scaffold-DbContext &quot;Data Source=ServerName;Database=SchoolDB;Trusted_Connection=True;&quot; Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models</span><br></pre></td></tr></table></figure>
+
+<p>第一个参数为连接字符串，其中Data Source为服务器名称，Database为数据库名称；第二个参数为provider名称，此处使用Microsoft.EntityFrameworkCore.SqlServer；第三个参数为EF Core创建的POCO类输出的所在文件夹。</p>
+<p>EF Core会自动创建POCO类<br><img src="/images/06.png" alt="图片6"></p>
+<p>可参考命令：</p>
+<blockquote>
+<p>Scaffold-DbContext [-Connection] [-Provider] [-OutputDir] [-Context] [-Schemas&gt;] [-Tables&gt;][-DataAnnotations][-Force] [-Project] [-StartupProject]</p>
+</blockquote>
+<p>可以使用以下命令获取帮助</p>
+<blockquote>
+<p>get-help scaffold-dbcontext -detailed</p>
+</blockquote>
+<h3 id="DbContext"><a href="#DbContext" class="headerlink" title="DbContext"></a>DbContext</h3><p>DbContext的实例表示与数据库的会话，可以使用该会话查询实体的实例并将其保存到数据库中。DbContext是工作单元和存储库模式的组合。</p>
+<p>DbContext在EF Core中执行以下任务：  </p>
+<ul>
+<li>管理数据库连接</li>
+<li>配置模型和关系</li>
+<li>查询数据库</li>
+<li>保存数据到数据库</li>
+<li>配置变化追踪</li>
+<li>缓存</li>
+<li>事务管理</li>
+</ul>
+<p>首先需要创建派生自DBContext的类，cntext类中为每个实体创建DbSet<tentity>属性  </tentity></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">public partial class SchoolDBContext : DbContext</span><br><span class="line">&#123;</span><br><span class="line">        public SchoolDBContext()</span><br><span class="line">        &#123;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        public SchoolDBContext(DbContextOptions&lt;SchoolDBContext&gt; options)</span><br><span class="line">            : base(options)</span><br><span class="line">        &#123;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        public virtual DbSet&lt;Course&gt; Course &#123; get; set; &#125;</span><br><span class="line">        public virtual DbSet&lt;Standard&gt; Standard &#123; get; set; &#125;</span><br><span class="line">        public virtual DbSet&lt;Student&gt; Student &#123; get; set; &#125;</span><br><span class="line">        public virtual DbSet&lt;StudentAddress&gt; StudentAddress &#123; get; set; &#125;</span><br><span class="line">        public virtual DbSet&lt;Teacher&gt; Teacher &#123; get; set; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们需要创建context类来连接数据库，并其中的学生或课程等数据进行CRUD</p>
+<h4 id="DbContext方法："><a href="#DbContext方法：" class="headerlink" title="DbContext方法："></a>DbContext方法：</h4><ul>
+<li>Add<ul>
+<li>使用Add的状态向DbContext添加一个新实体，并开始跟踪它。当调用SaveChanges()时，这个新的实体数据将被插入到数据库中。</li>
+</ul>
+</li>
+<li>AddAsync<ul>
+<li>异步方法，用于将具有Add状态的新实体添加到DbContext并开始跟踪它。当调用SaveChangesAsync()时，这个新的实体数据将被插入到数据库中。</li>
+</ul>
+</li>
+<li>AddRange<ul>
+<li>使用Add的状态向DbContext添加<strong>一组</strong>新实体，并开始跟踪它。当调用SaveChanges()时，这个新的实体数据将被插入到数据库中。</li>
+</ul>
+</li>
+<li>AddRangeAsync<ul>
+<li>用于Add将保存在SaveChangesAsync()上的新实体集合的异步方法。</li>
+</ul>
+</li>
+<li>Attach<ul>
+<li>将新实体或现有实体以未更改的状态附加到DbContext并开始跟踪它。</li>
+</ul>
+</li>
+<li>AttachAsync<ul>
+<li>将<strong>一组</strong>新实体或现有实体以未更改的状态附加到DbContext，并开始跟踪它。</li>
+</ul>
+</li>
+<li>Entry<ul>
+<li>获取给定实体的EntityEntry。该条目提供对实体更改跟踪信息和操作的访问。</li>
+</ul>
+</li>
+<li>Find<ul>
+<li>查找具有给定<strong>主键值</strong>的实体。</li>
+</ul>
+</li>
+<li>FindAsync<ul>
+<li>用于查找具有给定<strong>主键值</strong>的实体的异步方法。</li>
+</ul>
+</li>
+<li>Remove<ul>
+<li>将指定实体设置为删除属性，该实体将在调用SaveChanges()时删除数据。</li>
+</ul>
+</li>
+<li>RemoveRange<ul>
+<li>将一组实体设置为删除状态，当调用SaveChanges()时，这些实体将在单个DB往返过程中删除数据。</li>
+</ul>
+</li>
+<li>SaveChanges<ul>
+<li>为添加、修改或删除状态的实体向数据库执行INSERT、UPDATE或DELETE命令。</li>
+</ul>
+</li>
+<li>SaveChangesAsync<ul>
+<li>SaveChanges的异步方法</li>
+</ul>
+</li>
+<li>Set<ul>
+<li>创建一个DbSet<tentity>，可用于查询和保存TEntity实例。</tentity></li>
+</ul>
+</li>
+<li>Update<ul>
+<li>将断开连接的实体连接到修改后的状态，并开始跟踪它。调用SaveChagnes()时将保存数据。</li>
+</ul>
+</li>
+<li>UpdateRange<ul>
+<li>用修改后的状态附加一组断开连接的实体，并开始跟踪它。调用SaveChagnes()时将保存数据。</li>
+</ul>
+</li>
+<li>OnConfiguring<ul>
+<li>重写此方法来配置用于此上下文的数据库(和其他选项)。对于创建的上下文的每个实例都调用此方法。</li>
+</ul>
+</li>
+<li>OnModelCreating<ul>
+<li>重写此方法，以进一步配置根据约定从派生上下文中DbSet<tentity>属性中公开的实体类型发现的模型。</tentity></li>
+</ul>
+</li>
+</ul>
+<h4 id="DbContext属性"><a href="#DbContext属性" class="headerlink" title="DbContext属性"></a>DbContext属性</h4><ul>
+<li>ChangeTracker<ul>
+<li>提供对此上下文跟踪的实体实例的信息和操作的访问</li>
+</ul>
+</li>
+<li>Database<ul>
+<li>提供对此上下文的数据库相关信息和操作的访问</li>
+</ul>
+</li>
+<li>Model<ul>
+<li>返回关于实体的形状、它们之间的关系以及它们如何映射到数据库的元数据。</li>
+</ul>
+</li>
+</ul>
+<h3 id="EF-Core控制台程序演示"><a href="#EF-Core控制台程序演示" class="headerlink" title="EF Core控制台程序演示"></a>EF Core控制台程序演示</h3><p>创建一个新的控制台应用程序。 文件-&gt;新建-》项目-&gt;控制台应用(.net Core)，使用PMC安装SQL Server Provider安装包:</p>
+<blockquote>
+<p>Install-package Microsoft.EntityFrameworkCore.SqlServer</p>
+</blockquote>
+<p>安装详情可查看前文 <strong>安装EF</strong></p>
+<h4 id="创建模型"><a href="#创建模型" class="headerlink" title="创建模型"></a>创建模型</h4><p>EF Core需要一个实体数据模型来与数据库进行交互。它会根据领域类来创建模型。EF Core基于您使用的提供程序构建存储模型和映射。EF将此模型用于底层数据库的CRUD(创建、读取、更新、删除)操作。<br>创建实体类：  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">//课程类</span><br><span class="line">public class Course</span><br><span class="line">   &#123;</span><br><span class="line">       public int CourseId &#123; get; set; &#125;</span><br><span class="line">       public String CourseName &#123; get; set; &#125;</span><br><span class="line">   &#125;</span><br><span class="line">//学生类</span><br><span class="line">public class Student</span><br><span class="line">   &#123;</span><br><span class="line">       public int StudentId &#123; get; set; &#125;</span><br><span class="line">       public String Name &#123; get; set; &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<p>创建context类：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">class SchoolContext: Microsoft.EntityFrameworkCore.DbContext</span><br><span class="line">&#123;</span><br><span class="line">    public DbSet&lt;Student&gt; Students &#123; get; set; &#125;</span><br><span class="line">    public DbSet&lt;Course&gt; Courses &#123; get; set; &#125;</span><br><span class="line"></span><br><span class="line">    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)</span><br><span class="line">    &#123;</span><br><span class="line">        optionsBuilder.UseSqlServer(@&quot;Server=ServerName;Database=DatabaseName;Trusted_Connection=True;&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在重写的OnConfiguring方法中，使用UseSqlServer指定要连接的数据库，连接字符串中Server为服务器名称，Database为数据库名称。<br>在添加完实体和context之后，通过迁移来添加一个数据库。</p>
+<h3 id="迁移"><a href="#迁移" class="headerlink" title="迁移"></a>迁移</h3><p>此时假定还没有数据库，我们需要创建一个SchoolDB，在PMC中使用以下命令：  </p>
+<blockquote>
+<p>PM&gt; add-migration CreateSchoolDB</p>
+</blockquote>
+<p>此时就会在项目中船舰一个名为Migrations的新文件夹，如下图所示：<br><img src="/images/07.png" alt="图片07"></p>
+<p>迁移之后，在PMC中使用以下命令创建数据库：  </p>
+<blockquote>
+<p>PM&gt; update-database -verbose</p>
+</blockquote>
+<p>此时数据库也成功创建<br><img src="/images/08.png" alt="图片8"></p>
+<h3 id="查询"><a href="#查询" class="headerlink" title="查询"></a>查询</h3><h4 id="函数查询"><a href="#函数查询" class="headerlink" title="函数查询"></a>函数查询</h4><p>在EF Core中允许使用函数查询，这在EF 6中是不允许的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">pravite static void Main(String[] args)&#123;</span><br><span class="line">	var context=new SchoolContext();</span><br><span class="line">	var StudentWithSameName=context.Students</span><br><span class="line">								   .Where(S=&gt;s.FristName==GetName())</span><br><span class="line">								   .ToList();</span><br><span class="line">&#125;</span><br><span class="line">public static String GetName()&#123;</span><br><span class="line">	return &quot;zhangsan&quot;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="立即加载"><a href="#立即加载" class="headerlink" title="立即加载"></a>立即加载</h4><p>使用include()方法来实现立即加载，与EF6不同的是EF Core支持lambda表达式设定导航参数。如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">var context=new SchoolContext();</span><br><span class="line">vat studentWithGrade=context.Students</span><br><span class="line">  							.Where(s=&gt;s.FirstName==&quot;Bill&quot;)</span><br><span class="line">							.Include(s=&gt;s.Grade)</span><br><span class="line">							.FirstOrDefault();</span><br></pre></td></tr></table></figure>
+
+<p>当然，也可以在Include（）中指定字符串为”Grade”,同EF 6一样，但是不建议使用该操作，容易引发异常。<br>EF Core 2.0版本中，不能在Find()方法后使用Include()方法，例如，不能采用 context.Students.Find(1).Include()。</p>
+<p>EF Core中引入了新的ThenInclude属性，在使用时，先调用Include()方法，之后再调用ThenInclude()方法。如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">var context = new SchoolContext();</span><br><span class="line">var student = context.Students.Where(s=&gt;s.FirstName==&quot;Bill&quot;)</span><br><span class="line">							  .Include(s=&gt;s.Grade)</span><br><span class="line">							  	.ThenInclude(g=&gt;g.Teachers)</span><br><span class="line">							  .FirstOrDefault();</span><br></pre></td></tr></table></figure>
+
+<h4 id="投影查询"><a href="#投影查询" class="headerlink" title="投影查询"></a>投影查询</h4><p>我们也可以使用投影加载来代替Include()和ThenInclude()方法。如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">var context=new SchoolContext();</span><br><span class="line">var student=context.Students.Where(s=&gt;s.FirstName==&quot;Bill&quot;)</span><br><span class="line">							.Select(s=&gt; new </span><br><span class="line">							&#123;</span><br><span class="line">								Student=s,</span><br><span class="line">								Grade=s.Grade,</span><br><span class="line">								GradeTeachers=s.Grade.Teachers</span><br><span class="line">							&#125;)</span><br><span class="line">							.FirstOrDefualt();</span><br></pre></td></tr></table></figure>
+
+<h4 id="显式加载和延迟加载"><a href="#显式加载和延迟加载" class="headerlink" title="显式加载和延迟加载"></a>显式加载和延迟加载</h4><p>EF Core2.0中，显示加载同EF 6，但不在支持延迟加载（Lazy Loading）。</p>
+<h3 id="保存数据"><a href="#保存数据" class="headerlink" title="保存数据"></a>保存数据</h3><p>保存数据分为在连接的场景中保存数据和在非连接的场景中保存数据，此处为<strong>在连接的场景中</strong>保存数据。<br>EF Core会根据EntityState的状态进行CRUD操作，在连接的场景中，DbContext的一个实例跟踪所有实体，因此每当创建、修改或删除实体时，它都会自动设置每个实体的适当<code>EntityState</code>。</p>
+<p>下图演示了CUD（增删改）操作过程:<br><img src="https://www.entityframeworktutorial.net/images/efcore/save-data-in-connected-scenario.png" alt="CUD"></p>
+<h4 id="插入数据"><a href="#插入数据" class="headerlink" title="插入数据"></a>插入数据</h4><p>使用<code>DbSet.Add()</code>和<code>DbContext.Add</code>将实体状态设置为<code>Added</code>，并在调用SaveChanges()后将数据提交到数据库。如下所示：  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">using(var context=new SchoolContext())</span><br><span class="line">&#123;</span><br><span class="line">	var student=new Student()</span><br><span class="line">	&#123;</span><br><span class="line">		FirstName=&quot;Bill&quot;,</span><br><span class="line">		LastName=&quot;Gates&quot;</span><br><span class="line">	&#125;;</span><br><span class="line">	context.Students.Add(student);</span><br><span class="line">	//也可以使用以下形式</span><br><span class="line">	//context.Add&lt;Student&gt;(student);</span><br><span class="line"></span><br><span class="line">	context.SaveChages();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="更新数据"><a href="#更新数据" class="headerlink" title="更新数据"></a>更新数据</h4><p>在此场景（连接的）中，<code>TrakingChanges</code>自动跟踪实体状态，当对数据作出修改时，会将EntityState设置为<code>Modified</code>，并在调用<code>SaveChangs()</code>后将数据提交到数据库。如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">using(var context=new SchoolContext)</span><br><span class="line">&#123;</span><br><span class="line">	var student=context.Students.First&lt;Student&gt;(1);</span><br><span class="line">	std.FirstName=&quot;Steve&quot;;</span><br><span class="line">	</span><br><span class="line">	context.SaveChanges();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>示例中，我们只修改了<code>FirstName</code>属性，并未对其他属性作出修改，所以保存到数据库中时也只修改该属性。</p>
+<h4 id="删除数据"><a href="#删除数据" class="headerlink" title="删除数据"></a>删除数据</h4><p>使用<code>DbSet.Remove()</code>或<code>DbContext.Remove()</code>方法删除数据。<code>TrackingChanges</code>将EntityState设置为<code>Deleted</code>，在调用<code>SaveChanges()</code>之后将请求发送到数据库。如下所示：  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">using(var context=new SchoolContext())</span><br><span class="line">&#123;</span><br><span class="line">	var student=context.Students.First&lt;Student&gt;();</span><br><span class="line">	context.Students.Remove(student);</span><br><span class="line">	//或采用以下方式</span><br><span class="line">	//context.Remove&lt;Student&gt;(student);</span><br><span class="line">	context.SaveChanges();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>约定优先于配置(Convention over Configuration)。有两种方法配置域类：</p>
+<ul>
+<li>注解</li>
+<li>Fluent API</li>
+</ul>
+<h4 id="注解"><a href="#注解" class="headerlink" title="注解"></a>注解</h4><p>如下所示：  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">[Table(&quot;StudentInfo&quot;)]  //创建表</span><br><span class="line">public class Student</span><br><span class="line">&#123;</span><br><span class="line">    public Student() &#123; &#125;</span><br><span class="line">        </span><br><span class="line">    [Key]  //设置主键</span><br><span class="line">    public int SID &#123; get; set; &#125;</span><br><span class="line"></span><br><span class="line">    [Column(&quot;Name&quot;, TypeName=&quot;ntext&quot;)]  //设置列</span><br><span class="line">    [MaxLength(20)] //设置长度</span><br><span class="line">    public string StudentName &#123; get; set; &#125;</span><br><span class="line"></span><br><span class="line">    [NotMapped] //不映射</span><br><span class="line">    public int? Age &#123; get; set; &#125;</span><br><span class="line">        </span><br><span class="line">        </span><br><span class="line">    public int StdId &#123; get; set; &#125;</span><br><span class="line"></span><br><span class="line">    [ForeignKey(&quot;StdId&quot;)] //设置外键</span><br><span class="line">    public virtual Standard Standard &#123; get; set; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Fluent-API"><a href="#Fluent-API" class="headerlink" title="Fluent API"></a>Fluent API</h3><p>EF Core使用Fluent API 来重写域类的约定。可以通过ModelBuilder类来配置比注解更多的东西。<br>EF Core的Fluent API有以下三个方面来配置模型：  </p>
+<ul>
+<li>模型配置<ul>
+<li>HasDbFluent():在针对关系数据库时配置数据库函数。  </li>
+<li>HasDefaultSchema():指定数据库模式  </li>
+<li>HasAnnotation():向实体添加或修改注解属性  </li>
+<li>HasSequence():配置关系型数据库序列</li>
+</ul>
+</li>
+<li>实体配置<ul>
+<li>HasAlternateKey():在EF模型中为实体配置一个备用键</li>
+<li>HasIndex():配置指定属性的索引</li>
+<li>HasKey():将属性或属性列表配置为主键</li>
+<li>HasMany:配置<code>一对多</code>或<code>多对多</code>关系中的<code>多</code>部分</li>
+<li>HasOne():配置<code>一对多</code>或<code>一对一</code>关系中的<code>一</code>部分</li>
+<li>Ignore():配置类或属性不应映射到表或列</li>
+<li>OwnsOne():</li>
+<li>ToTable():配置实体映射到的数据库表</li>
+</ul>
+</li>
+<li>属性配置<ul>
+<li>HasCloumnName():在数据库中为属性配置相应的列名</li>
+<li>HasColumnType():在数据库中为属性配置相应的数据类型</li>
+<li>HasComputedColumnSql():在关系型数据库中，配置要映射到数据库中计算列的属性</li>
+<li>HasDefaultValue():配置关系型数据库中属性映射到列的默认值</li>
+<li>HasDefaultValueSql():配置关系型数据库中属性映射到列的默认值的表达式</li>
+<li>HasField():指定要与属性一起使用的支持字段</li>
+<li>HasMaxLength():配置可存储在属性中的数据最大长度</li>
+<li>IsConcurrencyToken():配置要用作乐观并发令牌的属性。</li>
+<li>IsRequired():配置是否需要属性的有效值或null是否为有效值。</li>
+<li>IsRowVersion():配置要用于乐观并发检测的属性。</li>
+<li>IsUnicode():配置是否包含unicode字符的字符串属性</li>
+<li>ValueGeneratedNever():配置在保存实体时不能生成值的属性</li>
+<li>VakueGeneratedOnAdd():配置属性在保存新实体时具有生成的值。</li>
+<li>ValueGeneratedOnAddOrUpdate():配置属性在保存新实体或现有实体时具有生成的值</li>
+<li>ValueGeneratedOnUpdate():配置属性在保存现有实体时具有生成的值。</li>
+</ul>
+</li>
+</ul>
+<h4 id="Fluent-API-配置"><a href="#Fluent-API-配置" class="headerlink" title="Fluent API 配置"></a>Fluent API 配置</h4><p>重写<code>OnModelCreating</code>放啊，并使用<code>ModelBuilder</code>类型的<code>modelBuilder</code>的类来配置域类，如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">public class SchoolDbContext:DbContext</span><br><span class="line">&#123;</span><br><span class="line">	public DbSet&lt;Studnet&gt; Students&#123;get;set;&#125;</span><br><span class="line"></span><br><span class="line">	protected override void OnModelCreating(ModelBuilder modelBuilder)</span><br><span class="line">	&#123;</span><br><span class="line">		//Write Fluent API configurations here</span><br><span class="line">		//Property Configurations</span><br><span class="line">		modelBuilder.Entity&lt;Student&gt;()</span><br><span class="line">				.Property(s=&gt;s.StudentId)</span><br><span class="line">				.HasColumnName(&quot;Id&quot;)</span><br><span class="line">				.HasDefaultValue(0)</span><br><span class="line">				.IsRequired();</span><br><span class="line">	&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="在EF-Core中使用Fluent-API配置一对多关系"><a href="#在EF-Core中使用Fluent-API配置一对多关系" class="headerlink" title="在EF Core中使用Fluent API配置一对多关系"></a>在EF Core中使用Fluent API配置一对多关系</h4><p>EF Core中已经包含了足够的约定来自动配置一对多的关系，但也可以用Fluent API来配置它。</p>
+<p>EF Core使Fluent API配置关系变得很容易。参考以下学生和年级类，其中年级实体包含许多学生实体。  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">public class Student</span><br><span class="line">&#123;</span><br><span class="line">    public int Id &#123; get; set; &#125;</span><br><span class="line">    public string Name &#123; get; set; &#125;</span><br><span class="line"></span><br><span class="line">    public int CurrentGradeId &#123; get; set; &#125;</span><br><span class="line">    public Grade Grade &#123; get; set; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public class Grade</span><br><span class="line">&#123;</span><br><span class="line">    public int GradeId &#123; get; set; &#125;</span><br><span class="line">    public string GradeName &#123; get; set; &#125;</span><br><span class="line">    public string Section &#123; get; set; &#125;</span><br><span class="line"></span><br><span class="line">    public ICollection&lt;Student&gt; Students &#123; get; set; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用Fluent API 来重写<code>OnModelCreating()</code>方法，从而配置以上实体间多对多的关系。  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">public class SchoolContext:DbContext</span><br><span class="line">&#123;</span><br><span class="line">	protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)</span><br><span class="line">	&#123;</span><br><span class="line">		optionsBuilder.UseSqlServer(&quot;Server=ServerName;Database=DatabaseName;Trusted_Connection=True&quot;);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	protected override void OnModelCreating(ModelBuilder modelBuilder)</span><br><span class="line">	&#123;</span><br><span class="line">		modelBuilder.Entity&lt;Student&gt;()</span><br><span class="line">					.HasOne&lt;Grade&gt;(s=&gt;s.Grade)</span><br><span class="line">					.WithMany(g=&gt;g.Studnets)</span><br><span class="line">					.HasForeignKey(s=&gt;s.CurrentGradeId);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public Dbset&lt;Grade&gt; Grades&#123;get;set;&#125;</span><br><span class="line">	public Dbset&lt;Student&gt; Students&#123;get;set;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>流程<br>1.首先我们需要配置一个实体类，要么学生类或者年级类，所以<code>modelBuilder.Entity&lt;Student&gt;()</code>从<code>Student</code>类开始。<br>2.<code>.HasOne&lt;Grade&gt;(s=&gt;s.Grade)</code>指定学生实体包含一个名为<code>Grade``的年级类型属性。  
+3.</code>.WithMany(g=&gt;g.Studnets)<code>指定年级实体包含许多</code>Student<code>实体。</code>WithMany<code>推断集合导航属性。
+4.</code>.HasForeignKey`指定外键名称。只有当依赖项中有外键Id属性时才能使用。<br>如图所示：<br><img src="https://www.entityframeworktutorial.net/images/efcore/configure-onetomany-fluentapi.png" alt="流程图"></p>
+<h4 id="在EF-Core中使用Fluent-API-配置级联删除"><a href="#在EF-Core中使用Fluent-API-配置级联删除" class="headerlink" title="在EF Core中使用Fluent API 配置级联删除"></a>在EF Core中使用Fluent API 配置级联删除</h4><p>级联删除在删除相关父行时自动删除子行。例如，如果删除了一个年级，那么该年级的所有学生也应该自动从数据库中删除。演示如下：  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">modelBuilder.Entity&lt;Grade&gt;()</span><br><span class="line">    .HasMany&lt;Student&gt;(g =&gt; g.Students)</span><br><span class="line">    .WithOne(s =&gt; s.Grade)</span><br><span class="line">    .HasForeignKey(s =&gt; s.CurrentGradeId)</span><br><span class="line">    .OnDelete(DeleteBehavior.Cascade);</span><br></pre></td></tr></table></figure>
+
+<p>用<code>OnDelete</code>方法来级联删除使用了<code>DeleteBehavior</code>参数，我们可以根据需求选择以下DeleteBehaivor的值：  </p>
+<ul>
+<li>Cascade: 主体实体被删除事，依赖实体也会被删</li>
+<li>ClientSetNull:将依赖实体中的外键属性设置为Null</li>
+<li>Restrict:防止级联删除</li>
+<li>SetNull:依赖实体中的外键属性值将设置为null</li>
+</ul>
+<h4 id="在EF-Core中使用Fluent-API配置一对一关系"><a href="#在EF-Core中使用Fluent-API配置一对一关系" class="headerlink" title="在EF Core中使用Fluent API配置一对一关系"></a>在EF Core中使用Fluent API配置一对一关系</h4><p>通常，不需要手动配置一对一关系，因为EF Core包含一对一关系的约定。但是，如果键或外键属性不遵循约定，则可以使用注解或Fluent API来配置两个实体之间的一对一关系。<br>以<code>Student</code>和<code>StudentAddress</code>为例，他们不遵循外键约定  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">public class Student</span><br><span class="line">&#123;</span><br><span class="line">    public int Id &#123; get; set; &#125;</span><br><span class="line">    public string Name &#123; get; set; &#125;</span><br><span class="line">       </span><br><span class="line">    public StudentAddress Address &#123; get; set; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public class StudentAddress</span><br><span class="line">&#123;</span><br><span class="line">    public int StudentAddressId &#123; get; set; &#125;</span><br><span class="line">    public string Address &#123; get; set; &#125;</span><br><span class="line">    public string City &#123; get; set; &#125;</span><br><span class="line">    public string State &#123; get; set; &#125;</span><br><span class="line">    public string Country &#123; get; set; &#125;</span><br><span class="line"></span><br><span class="line">    public int AddressOfStudentId &#123; get; set; &#125;</span><br><span class="line">    public Student Student &#123; get; set; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在EF Core中使用Fluent API配置一对一关系，可以使用<code>HasOne</code>、<code>WithOne</code>和<code>HasForenginKey</code>方法，如下所示：  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">public class SchoolContext : DbContext</span><br><span class="line">&#123;</span><br><span class="line">    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)</span><br><span class="line">    &#123;</span><br><span class="line">        optionsBuilder.UseSqlServer(&quot;Server=.\\SQLEXPRESS;Database=EFCore-SchoolDB;Trusted_Connection=True&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    protected override void OnModelCreating(ModelBuilder modelBuilder)</span><br><span class="line">    &#123;</span><br><span class="line">        modelBuilder.Entity&lt;Student&gt;()</span><br><span class="line">            .HasOne&lt;StudentAddress&gt;(s =&gt; s.Address)</span><br><span class="line">            .WithOne(ad =&gt; ad.Student)</span><br><span class="line">            .HasForeignKey&lt;StudentAddress&gt;(ad =&gt; ad.AddressOfStudentId);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public DbSet&lt;Student&gt; Students &#123; get; set; &#125;</span><br><span class="line">    public DbSet&lt;StudentAddress&gt; StudentAddresses &#123; get; set; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>1.<code>modelBuilder.ENtity&lt;Student&gt;()</code>开始配置学生实体。<br>2.<code>.HasOne&lt;StudentAddress&gt;</code>方法指定Student实体包含一个使用lambda表达式的Student address引用属性。<br>3.<code>.WithOne</code>配置关系的另一端StudentAddress实体。它指定Student address实体包含Student类型的引用导航属性<br>4.<code>HasForeignKey&lt;StudentAddress&gt;(ad=ad.AddressOfStudentId)</code>指定外键属性名称。<br>如下图所示：<br><img src="https://www.entityframeworktutorial.net/images/efcore/onetoone-fluent.png" alt="流程图"></p>
+<h4 id="在EF-Core中使用Fluent-API配置多对多关系"><a href="#在EF-Core中使用Fluent-API配置多对多关系" class="headerlink" title="在EF Core中使用Fluent API配置多对多关系"></a>在EF Core中使用Fluent API配置多对多关系</h4><p>让我们实现以下学生和课程实体之间的多对多关系，其中一个学生可以注册多个课程，同样，一个课程可以由多个学生加入。  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public class Student</span><br><span class="line">&#123;</span><br><span class="line">    public int StudentId &#123; get; set; &#125;</span><br><span class="line">    public string Name &#123; get; set; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public class Course</span><br><span class="line">&#123;</span><br><span class="line">    public int CourseId &#123; get; set; &#125;</span><br><span class="line">    public string CourseName &#123; get; set; &#125;</span><br><span class="line">    public string Description &#123; get; set; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>数据库中的多对多关系由一个包含两个表的外键的连接表表示。此外，这些外键是组合主键。<br><img src="https://www.entityframeworktutorial.net/images/efcore/manytomany-db-diagram.png" alt="示意图"><br>在EF Core中没有可用的自动配置多对多关系的约定，所以需要使用Fluent API手动配置。</p>
+<p>我们必须为连接表创建连接实体类。上述学生和课程实体的连接实体应包括一个外键属性和每个实体的一个参考导航属性。配置多对多关系的步骤如下：    </p>
+<ul>
+<li>定义一个新的连接实体类，其中包含每个实体的外键属性和引用导航属性</li>
+<li>在实体的两侧(在本例中是Student和Course)包含一个集合导航属性来定义两个实体和新实体间的一对多关系</li>
+<li>使用Fluent API将连接实体中的两个外键配置为组合键</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">	//首先定义新实体 StudentCourse</span><br><span class="line">public class StudentCourse</span><br><span class="line">&#123;</span><br><span class="line">	public int StudentId&#123;get;set;&#125;</span><br><span class="line">	public Student Student&#123;get;set;&#125;</span><br><span class="line"></span><br><span class="line">	public in CourseId&#123;get;set;&#125;</span><br><span class="line">	public Course Course&#123;get;set;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述新实体<code>StudentCourse</code>中包含了引用导航属性<code>Student</code>和<code>Course</code>,同时也分别包含了外键属性<code>StudentId</code>和<code>CourseId</code>（外键遵循约定）。<br>现在我们需要分别实现<strong><code>Student---StudentCourse</code></strong>和<strong><code>Course---StudentCourse</code></strong>的一对多关系，方式与前面上述一对多关系实现方法相同。如下所示：  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public class Student</span><br><span class="line">&#123;</span><br><span class="line">	public int StudentId&#123;get;set;&#125;</span><br><span class="line">	public String Name&#123;get;set;&#125;</span><br><span class="line">	</span><br><span class="line">	public IList&lt;StudentCourse&gt; StudentCourse&#123;get;set;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public class Course</span><br><span class="line">&#123;</span><br><span class="line">	public int CourseId&#123;get;set;&#125;</span><br><span class="line">	public String Course&#123;get;set;&#125;</span><br><span class="line">	public String Description&#123;get;set;&#125;</span><br><span class="line"></span><br><span class="line">	public Ilist&lt;StudentCourse&gt; StudentCourse&#123;get;set;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如上，<code>Student</code>和<code>Course</code>实体中现在都包含有<code>StudentCourse</code>类型的集合导航属性。而在<code>StudentCourse</code>中又包含有两个实体的外键属性和导航属性。这让<code>Student---StudentCourese</code>和<code>Course---StudentCourse</code>成为完全的一对多关系。现在，只能使用Flunet API来将新实体中的外键转换成组合主键。如下所示：  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public class SchoolContext : DbContext</span><br><span class="line">&#123;</span><br><span class="line">    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)</span><br><span class="line">    &#123;</span><br><span class="line">        optionsBuilder.UseSqlServer(&quot;Server=.\\SQLEXPRESS;Database=EFCore-SchoolDB;Trusted_Connection=True&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    protected override void OnModelCreating(ModelBuilder modelBuilder)</span><br><span class="line">    &#123;</span><br><span class="line">        modelBuilder.Entity&lt;StudentCourse&gt;().HasKey(sc =&gt; new &#123; sc.StudentId, sc.CourseId &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    public DbSet&lt;Student&gt; Students &#123; get; set; &#125;</span><br><span class="line">    public DbSet&lt;Course&gt; Courses &#123; get; set; &#125;</span><br><span class="line">    public DbSet&lt;StudentCourse&gt; StudentCourses &#123; get; set; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述过程中，<code>modelBuilder.Entity&lt;StudentCourse&gt;().HasKey(sc =&gt; new { sc.StudentId, sc.CourseId });</code>将<code>StudentId</code>和<code>CourseId</code>转换为组合主键。</p>
+<p>如果实体遵循连接实体的一对多关系的约定，则可以通过这种方式配置多对多关系。假设外键属性名称不遵循约定(例如SID代替StudentId, CID代替CourseId)，那么可以使用Fluent API配置它，如下所示。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">modelBuilder.Entity&lt;StudentCourse&gt;().HasKey(sc =&gt; new &#123; sc.SId, sc.CId &#125;); //设置SId和CId为主键</span><br><span class="line"></span><br><span class="line">modelBuilder.Entity&lt;StudentCourse&gt;() //配置Student和StudentCourse的一对多关系</span><br><span class="line">    .HasOne&lt;Student&gt;(sc =&gt; sc.Student)</span><br><span class="line">    .WithMany(s =&gt; s.StudentCourses)</span><br><span class="line">    .HasForeignKey(sc =&gt; sc.SId);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">modelBuilder.Entity&lt;StudentCourse&gt;()//配置Course和StudentCourse的一对多关系</span><br><span class="line">    .HasOne&lt;Course&gt;(sc =&gt; sc.Course)</span><br><span class="line">    .WithMany(s =&gt; s.StudentCourses)</span><br><span class="line">    .HasForeignKey(sc =&gt; sc.CId);</span><br></pre></td></tr></table></figure>
+
+<h3 id="在断开连接的场景中操作数据"><a href="#在断开连接的场景中操作数据" class="headerlink" title="在断开连接的场景中操作数据"></a>在断开连接的场景中操作数据</h3><h4 id="插入数据-1"><a href="#插入数据-1" class="headerlink" title="插入数据"></a>插入数据</h4><p>在断开连接的场景中，无法使用<code>TrackingChange</code>来自动跟踪实体状态，Context不知道实体是否添加或者修改，因此需要将实体附加到<code>DbContext</code>的同时设定实体状态。如下图所示：<br><img src="https://www.entityframeworktutorial.net/images/efcore/save-data-in-disconnected-scenario.png" alt="示意图"></p>
+<p>示例中，需要使用<code>EntityState</code>设置实体状态属性，<code>DbContext</code>将在调用<code>SaveChanges()</code>方法后，依照设定的实体状态对数据库进行操作。例如设定<code>EntityState</code>为<code>Added</code>，在调用<code>SaveChanges()</code>方法后，数据库会执行<code>Insert</code>操作。</p>
+<p>断开场景中执行操作可分为以下步骤：  </p>
+<ul>
+<li>使用适当的<code>EntityState</code>将实体附加到<code>DbContext</code>中。</li>
+<li>调用<code>SaveChanges()</code>方法。</li>
+</ul>
+<p>下面演示插入操作：  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">//在断开连接的场景中的插入操作演示</span><br><span class="line">var std = new Student()&#123; Name = &quot;Bill&quot; &#125;;</span><br><span class="line"></span><br><span class="line">using (var context = new SchoolContext())</span><br><span class="line">&#123;</span><br><span class="line">    //1. 将&quot;Added&quot;状态的实体附加到context中</span><br><span class="line">    context.Add&lt;Student&gt;(std);</span><br><span class="line">    </span><br><span class="line">    //或者采用以下方法</span><br><span class="line">    // context.Students.Add(std);</span><br><span class="line">    // context.Entry&lt;Student&gt;(std).State = EntityState.Added;</span><br><span class="line">    // context.Attach&lt;Student&gt;(std);</span><br><span class="line">                  </span><br><span class="line">    //2. 调用SaveChanges()方法</span><br><span class="line">    context.SaveChanges();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<table>
+  <tr>
+    <th>DbContext方法</th>
+    <th>DbSet方法</th>
+    <th>描述</th>
+  </tr>
+  <tr>
+    <td>DbContext.Attach</td>
+    <td>DbSet.Attach</td>
+    <td>将一个实体附加到DbContext中，为键属性有值的实体设置Unchaged属性，为键属性为空或默认值的实体添加Added属性</td>
+  </tr>
+  <tr>
+    <td>DbContext.Add</td>
+    <td>DbSet.Add</td>
+    <td>将一个实体附加到DbContex中，并设为Added状态</td>
+  </tr>
+  <tr>
+    <td>DbContext.AddRange</td>
+    <td>DbSet.AddRange</td>
+    <td>将一组实体附加到DbContex中，并设为Added状态</td>
+  </tr>
+  <tr>
+    <td>DbContext.Entry</td>
+    <td>-</td>
+    <td>获取提供对更改跟踪信息和访问操作的实体的EntityEntry</td>
+  </tr>
+  <tr>
+    <td>DbContext.AddAsync</td>
+    <td>DbSet.AddAsync</td>
+    <td>Add方法的异步方法</td>
+  </tr>
+  <tr>
+    <td>DbContext.AddRange</td>
+    <td>DbSet.AddRange</td>
+    <td>AddRange方法的异步方法</td>
+  </tr>
+</table>
+
+<p><strong>插入关联数据</strong><br>使用<code>DbContext</code>或<code>DbSet</code>将实体添加到数据库中。Add方法将实体附加到context中，并将添加的状态设置为 id 属性为空,null,或者默认值。如下所示：  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">var stdAddress = new StudentAddress()</span><br><span class="line">&#123;</span><br><span class="line">    City = &quot;SFO&quot;,</span><br><span class="line">    State = &quot;CA&quot;,</span><br><span class="line">    Country = &quot;USA&quot;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">var std = new Student()</span><br><span class="line">&#123;</span><br><span class="line">    Name = &quot;Steve&quot;,</span><br><span class="line">    Address = stdAddress</span><br><span class="line">&#125;;</span><br><span class="line">using (var context = new SchoolContext())</span><br><span class="line">&#123;</span><br><span class="line">    // Attach an entity to DbContext with Added state</span><br><span class="line">    context.Add&lt;Student&gt;(std);</span><br><span class="line"></span><br><span class="line">    // Calling SaveChanges to insert a new record into Students table</span><br><span class="line">    context.SaveChanges();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>插入多条记录</strong></p>
+<table>
+    <tr>
+        <th>AddRange方法</th>
+        <th>描述</th>
+    </tr>
+    <tr>
+        <td>void AddRange(IEnumerable<object> entities)</object></td>
+        <td>将相同或不同类型的实体集合添加到具有Added属性的DbContext中</td>
+    </tr>
+    <tr>
+        <td>void AddRange(param object[] entities)</td>
+        <td>将相同或不同类型的实体数组添加到具有Added属性的DbContext中</td>
+    </tr>
+    <tr>
+        <td>void AddRangeAsync(IEnumerable<object>, CancellationToken)</object></td>
+        <td>异步方法将相同或不同类型的实体集合添加到具有添加状态的DbContex</td>
+    </tr>
+</table>
+
+<p>如下所示：  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">var studentList = new List&lt;Student&gt;() &#123;</span><br><span class="line">    new Student()&#123; Name = &quot;Bill&quot; &#125;,</span><br><span class="line">    new Student()&#123; Name = &quot;Steve&quot; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">using (var context = new SchoolContext())</span><br><span class="line">&#123;</span><br><span class="line">    context.AddRange(studentList);</span><br><span class="line">    context.SaveChanges();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>同样，也可以添加不同类型的实体集合。如下所示：  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">var std1 = new Student()&#123; Name = &quot;Bill&quot; &#125;;</span><br><span class="line"></span><br><span class="line">var std2 = new Student()&#123; Name = &quot;Steve&quot; &#125;;</span><br><span class="line"></span><br><span class="line">var computer = new Course() &#123; CourseName = &quot;Computer Science&quot; &#125;;</span><br><span class="line"></span><br><span class="line">var entityList = new List&lt;Object&gt;() &#123;</span><br><span class="line">    std1,</span><br><span class="line">    std2,</span><br><span class="line">    computer</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">using (var context = new SchoolContext())</span><br><span class="line">&#123;                </span><br><span class="line">    context.AddRange(entityList);</span><br><span class="line"></span><br><span class="line">    // or </span><br><span class="line">    // context.AddRange(std1, std2, computer);</span><br><span class="line"></span><br><span class="line">    context.SaveChanges();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="更新数据-1"><a href="#更新数据-1" class="headerlink" title="更新数据"></a>更新数据</h4><p>在断开连接场景中修改数据，我们不知道哪些实体经过修改，所以我们需要将修改后的实体的<code>EntityState</code>设置为<code>Modified</code>，并附加到DbContext中。</p>
+<table>
+    <tr>
+        <th>DbContext方法</th>
+        <th>DbSet方法</th>
+        <th>描述</th>
+    </tr>
+    <tr>
+        <td>DbContext.Update</td>
+        <td>DbSet.Update</td>
+        <td>将一个实体以Modified状态添加到DbContext中</td>
+    </tr>
+    <tr>
+        <td>DbContext.UpdateRange</td>
+        <td>DbSet.UpdateRange</td>
+        <td>将一组实体以Modified状态添加到DbContext中</td>
+    </tr>
+</table>
+
+<p>下面的示例将演示这些方法：  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">//断开连接的学生实体</span><br><span class="line">var stud = new Student()&#123; StudentId = 1, Name = &quot;Bill&quot; &#125;;</span><br><span class="line"></span><br><span class="line">stud.Name = &quot;Steve&quot;; </span><br><span class="line"></span><br><span class="line">using (var context = new SchoolContext())</span><br><span class="line">&#123;</span><br><span class="line">    context.Update&lt;Student&gt;(stud);</span><br><span class="line"></span><br><span class="line">    // 也可以采用以下形式</span><br><span class="line">    // context.Students.Update(stud);</span><br><span class="line">    // context.Attach&lt;Student&gt;(stud).State = EntityState.Modified;</span><br><span class="line">    // context.Entry&lt;Student&gt;(stud).State = EntityState.Modified; </span><br><span class="line"></span><br><span class="line">    context.SaveChanges(); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>更新多个数据</strong></p>
+<p>使用<code>DbContext.UpdateRange</code>和<code>DbSet.UpdateRange</code>方法更新多个数据。如下所示  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">var modifiedStudent1 = new Student()</span><br><span class="line">&#123;</span><br><span class="line">    StudentId = 1,</span><br><span class="line">    Name = &quot;Bill&quot;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">var modifiedStudent2 = new Student()</span><br><span class="line">&#123;</span><br><span class="line">    StudentId = 3,</span><br><span class="line">    Name = &quot;Steve&quot;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">var modifiedStudent3 = new Student()</span><br><span class="line">&#123;</span><br><span class="line">    StudentId = 3,</span><br><span class="line">    Name = &quot;James&quot;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">IList&lt;Student&gt; modifiedStudents = new List&lt;Student&gt;()</span><br><span class="line">&#123;</span><br><span class="line">    modifiedStudent1,</span><br><span class="line">    modifiedStudent2,</span><br><span class="line">    modifiedStudent3</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">using (var context = new SchoolContext())</span><br><span class="line">&#123;</span><br><span class="line">    context.UpdateRange(modifiedStudents);</span><br><span class="line">    </span><br><span class="line">    // or the followings are also valid</span><br><span class="line">    //context.UpdateRange(modifiedStudent1, modifiedStudent2, modifiedStudent3);</span><br><span class="line">    //context.Students.UpdateRange(modifiedStudents);</span><br><span class="line">    //context.Students.UpdateRange(modifiedStudent1, modifiedStudent2, modifiedStudent3);</span><br><span class="line">                </span><br><span class="line">    context.SaveChanges();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在EF Core中，使用了<code>Update</code>方法能够更新数据，但如果更新前根实体或者子实体的键(Key)属性，则会被判定为是一个新的实体，EntityState属性将会被设置为<code>Added</code>状态。如下所示：  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">public static void Main()</span><br><span class="line">&#123;</span><br><span class="line">    var newStudent = new Student()</span><br><span class="line">    &#123;</span><br><span class="line">        Name = &quot;Bill&quot;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    var modifiedStudent = new Student()</span><br><span class="line">    &#123;</span><br><span class="line">        StudentId = 1,</span><br><span class="line">        Name = &quot;Steve&quot;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    using (var context = new SchoolContext())</span><br><span class="line">    &#123;</span><br><span class="line">        context.Update&lt;Student&gt;(newStudent);</span><br><span class="line">        context.Update&lt;Student&gt;(modifiedStudent);</span><br><span class="line"></span><br><span class="line">        DisplayStates(context.ChangeTracker.Entries());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">private static void DisplayStates(IEnumerable&lt;EntityEntry&gt; entries)</span><br><span class="line">&#123;</span><br><span class="line">    foreach (var entry in entries)</span><br><span class="line">    &#123;</span><br><span class="line">        Console.WriteLine($&quot;Entity: &#123;entry.Entity.GetType().Name&#125;,</span><br><span class="line">                 State: &#123;entry.State.ToString()&#125; &quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>输出结果：<br>Entity:Student , State:Added<br>Entity:Student , State:Modified</p>
+</blockquote>
+<p>上述例子中<code>newStudent</code>没有键属性（StudentID）,因此Update方法将他设定为<code>Added</code>，而<code>modifiedStudent</code>有键属性，所以被设置为<code>Modified</code>。</p>
+<h4 id="删除数据-1"><a href="#删除数据-1" class="headerlink" title="删除数据"></a>删除数据</h4><p>EF Core中删除数据没有连接场景和断开连接场景的区别。</p>
+<table>
+    <tr>
+        <th>DbContext方法</th>
+        <th>DbSet方法</th>
+        <th>描述</th>
+    </tr>
+    <tr>
+        <td>DbContext.Remove</td>
+        <td>DbSet.Remove</td>
+        <td>将指定的一个实体附加到具有已删除状态的DbContext，并开始跟踪它。</td>
+    </tr>
+    <tr>
+        <td>DbContext.RemoveRange</td>
+        <td>DbSet.RemoveRange</td>
+        <td>将指定的一组实体附加到具有已删除状态的DbContext，并开始跟踪它。</td>
+    </tr>
+</table>
+
+
+<p>异常：<br>如果<code>Remeove()</code>或<code>RemoveRange()</code>中指定的实体中的键值在数据库中不存在，那么将会抛出异常。  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">var student = new Student() &#123;</span><br><span class="line">    StudentId = 50    //假设StudentId=50的实体不存在</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">using (var context = new SchoolContext()) &#123;</span><br><span class="line"></span><br><span class="line">    context.Remove&lt;Student&gt;(student);</span><br><span class="line"></span><br><span class="line">    context.SaveChanges();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述示例会抛出以下异常：  </p>
+<blockquote>
+<p>Database operation expected to affect 1 row(s) but actually affected 0 row(s). Data may have been modified or deleted since entities were loaded.</p>
+</blockquote>
+<p>所以在删除数据前最好能先确保数据库中有存在的目标数据。也可以<code>try...catch...</code>一下:  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">var student = new Student() &#123;</span><br><span class="line">    StudentId = 50</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">using (var context = new SchoolContext()) </span><br><span class="line">&#123;</span><br><span class="line">    try</span><br><span class="line">    &#123;</span><br><span class="line">        context.Remove&lt;Student&gt;(deleteStudent);</span><br><span class="line">        context.SaveChanges();</span><br><span class="line">    &#125;    </span><br><span class="line">    catch (DbUpdateConcurrencyException ex)</span><br><span class="line">    &#123;</span><br><span class="line">        throw new Exception(&quot;Record does not exist in the database&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    catch (Exception ex)</span><br><span class="line">    &#123;</span><br><span class="line">        throw;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>删除多条记录</strong><br>可以通过<code>DbContext.RemoveRange</code>或`DbSet.RemoveRange来一次删除多条记录。如下所示：  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">IList&lt;Student&gt; students = new List&lt;Student&gt;() &#123;</span><br><span class="line">    new Student()&#123; StudentId = 1 &#125;,</span><br><span class="line">    new Student()&#123; StudentId = 2 &#125;,</span><br><span class="line">    new Student()&#123; StudentId = 3 &#125;,</span><br><span class="line">    new Student()&#123; StudentId = 4 &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">using (var context = new SchoolContext()) </span><br><span class="line">&#123;</span><br><span class="line">    context.RemoveRange(students);</span><br><span class="line">    </span><br><span class="line">    // or</span><br><span class="line">    // context.Students.RemoveRange(students);</span><br><span class="line">    </span><br><span class="line">    context.SaveChanges();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果一个实体与其他实体存在关系（如一对一或一对多），则根实体被删除时相关数据是否删除取决于关系的配置方式。<br>例如，在Student和Grade实体中存在这一对多的关系，许多学生被划分为一个年级。当我们想删除包含有学生实体的年级时就会抛出异常。要解决这个问题可以通过配置Fluent API来解决。例如，可以配置关系为级联删除，如下所示：  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">modelBuilder.Entity&lt;Student&gt;()</span><br><span class="line">    .HasOne&lt;Grade&gt;(s =&gt; s.Grade)</span><br><span class="line">    .WithMany(g =&gt; g.Students)</span><br><span class="line">    .HasForeignKey(s =&gt; s.GradeId)</span><br><span class="line">    .OnDelete(DeleteBehavior.Cascade);</span><br></pre></td></tr></table></figure>
+
+<h3 id="变更追踪器"><a href="#变更追踪器" class="headerlink" title="变更追踪器"></a>变更追踪器</h3><p>EF Core中的变更追踪器（ChangeTracker）负责跟踪使用相同Context实例跟踪的</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+        
+        <div class="post-tags">
+            <a href="/tags/EntiryFrameworkCore/" rel="tag"> EntiryFrameworkCore</a>
+          
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/2019/08/03/使用Hexo搭建个人博客/" rel="next" title="使用Hexo搭建个人博客">
+                <i class="fa fa-chevron-left"></i> 使用Hexo搭建个人博客
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+              <a href="/2019/08/07/Vue-js/" rel="prev" title="Vue.js">
+                Vue.js <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/ixd.jpg"
+      alt="IxdCoding">
+  <p class="site-author-name" itemprop="name">IxdCoding</p>
+  <div class="site-description motion-element" itemprop="description">这人间情事,恍惚如突然飞过的麻雀儿</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://www.zhihu.com/people/mr-dong-xi" title="Zhihu &rarr; https://www.zhihu.com/people/mr-dong-xi" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>Zhihu</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://weibo.com/5591995010/profile?rightmod=1&wvr=6&mod=personinfo&is_all=1" title="Weibo &rarr; https://weibo.com/5591995010/profile?rightmod=1&wvr=6&mod=personinfo&is_all=1" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>Weibo</a>
+      </span>
+    
+  </div>
+
+
+  <div class="links-of-blogroll motion-element links-of-blogroll-block">
+    <div class="links-of-blogroll-title">
+      <i class="fa  fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://github.com/IxdCoding" title="https://github.com/IxdCoding" rel="noopener" target="_blank">GitHub</a>
+        </li>
+      
+    </ul>
+  </div>
+
+        </div>
+      </div>
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#开发方式"><span class="nav-number">1.</span> <span class="nav-text">开发方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装EF"><span class="nav-number">1.1.</span> <span class="nav-text">安装EF</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#安装-EF-Core-DB-Provider"><span class="nav-number">1.1.1.</span> <span class="nav-text">安装 EF Core DB Provider</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装-EF-Core-Tools"><span class="nav-number">1.1.2.</span> <span class="nav-text">安装 EF Core Tools</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用DB-First方法"><span class="nav-number">1.2.</span> <span class="nav-text">使用DB-First方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DbContext"><span class="nav-number">1.3.</span> <span class="nav-text">DbContext</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#DbContext方法："><span class="nav-number">1.3.1.</span> <span class="nav-text">DbContext方法：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#DbContext属性"><span class="nav-number">1.3.2.</span> <span class="nav-text">DbContext属性</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#EF-Core控制台程序演示"><span class="nav-number">1.4.</span> <span class="nav-text">EF Core控制台程序演示</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#创建模型"><span class="nav-number">1.4.1.</span> <span class="nav-text">创建模型</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#迁移"><span class="nav-number">1.5.</span> <span class="nav-text">迁移</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查询"><span class="nav-number">1.6.</span> <span class="nav-text">查询</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#函数查询"><span class="nav-number">1.6.1.</span> <span class="nav-text">函数查询</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#立即加载"><span class="nav-number">1.6.2.</span> <span class="nav-text">立即加载</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#投影查询"><span class="nav-number">1.6.3.</span> <span class="nav-text">投影查询</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#显式加载和延迟加载"><span class="nav-number">1.6.4.</span> <span class="nav-text">显式加载和延迟加载</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#保存数据"><span class="nav-number">1.7.</span> <span class="nav-text">保存数据</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#插入数据"><span class="nav-number">1.7.1.</span> <span class="nav-text">插入数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#更新数据"><span class="nav-number">1.7.2.</span> <span class="nav-text">更新数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#删除数据"><span class="nav-number">1.7.3.</span> <span class="nav-text">删除数据</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置"><span class="nav-number">1.8.</span> <span class="nav-text">配置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#注解"><span class="nav-number">1.8.1.</span> <span class="nav-text">注解</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Fluent-API"><span class="nav-number">1.9.</span> <span class="nav-text">Fluent API</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Fluent-API-配置"><span class="nav-number">1.9.1.</span> <span class="nav-text">Fluent API 配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#在EF-Core中使用Fluent-API配置一对多关系"><span class="nav-number">1.9.2.</span> <span class="nav-text">在EF Core中使用Fluent API配置一对多关系</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#在EF-Core中使用Fluent-API-配置级联删除"><span class="nav-number">1.9.3.</span> <span class="nav-text">在EF Core中使用Fluent API 配置级联删除</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#在EF-Core中使用Fluent-API配置一对一关系"><span class="nav-number">1.9.4.</span> <span class="nav-text">在EF Core中使用Fluent API配置一对一关系</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#在EF-Core中使用Fluent-API配置多对多关系"><span class="nav-number">1.9.5.</span> <span class="nav-text">在EF Core中使用Fluent API配置多对多关系</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在断开连接的场景中操作数据"><span class="nav-number">1.10.</span> <span class="nav-text">在断开连接的场景中操作数据</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#插入数据-1"><span class="nav-number">1.10.1.</span> <span class="nav-text">插入数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#更新数据-1"><span class="nav-number">1.10.2.</span> <span class="nav-text">更新数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#删除数据-1"><span class="nav-number">1.10.3.</span> <span class="nav-text">删除数据</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#变更追踪器"><span class="nav-number">1.11.</span> <span class="nav-text">变更追踪器</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">IxdCoding</span>
+</div>
+
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a></div>-->
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+
+    
+
+  </div>
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  <script src="/js/utils.js?v=7.3.0"></script>
+  <script src="/js/motion.js?v=7.3.0"></script>
+
+  
+  <script src="/js/schemes/muse.js?v=7.3.0"></script>
+
+
+  
+  <script src="/js/scrollspy.js?v=7.3.0"></script>
+<script src="/js/post-details.js?v=7.3.0"></script>
+
+
+
+  <script src="/js/next-boot.js?v=7.3.0"></script>
+
+  
+
+  
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
